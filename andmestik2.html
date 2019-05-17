@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+		<script src="html2canvas.min.js"></script>
+		<title>Stats</title>
+<style>
+    .header {
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-size: 24px;
+    }
+    .container {
+        text-align: center;
+        padding: 5px;
+        margin: auto;
+    }
+    #leftColumn{
+        width: 47%;
+        float: left;
+        display: inline-block;
+        font-family:"Open Sans";
+    }
+
+    #rightColumn{
+        width: 47%;
+        float: right;
+        font-family: "Open Sans";
+        font-size: 24px;
+    }
+    .navMenu{
+        border: none;
+        color: white;
+        padding: 16px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-family: "Open Sans";
+        font-size: 20px;
+        margin: 4px 2px;
+        -webkit-transition-duration: 0.4s;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        background-color: white; 
+        color: black; 
+        border: 2px solid #4545ff;
+    }
+    .navMenu:hover{
+        background-color: #4545ff;
+        color: white;
+    }
+    .paramSelec{
+        font-family:"Open Sans";
+        font-weight: normal;
+    }
+    .showButton{
+        padding: 16px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-family: "Poiret One";
+        font-size: 24px;
+        margin: 4px 2px;
+        -webkit-transition-duration: 0.4s;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        background-color: #4545ff; 
+        color: white; 
+        border: 2px solid #4545ff;
+        border-radius: 8px;
+    }
+    .showButton:hover{
+        background-color: white ;
+        color: #4545ff;
+
+    }
+</style>
+
+	</head>
+	<body>
+	    <div class="header">
+	        <div class="container">
+	            <button class="navMenu" onclick="navToGraphAndStats()">Pealeht</button>
+	        </div>
+	    </div>
+		<div class="main container">
+			<div class="graphControls" id="graphControls">
+				<input type="number" min="2017" max="2160" placeholder="Mis aasta?" id="startYear">
+				<input type="number" min="1" max="12" placeholder="Kuu nr" id="monthSelect">
+				<input type="number" min="1" max="31" placeholder="Alguskuupäev" id="mindate">
+				<input type="number" min="1" max="31" placeholder="Lõpukuupäev" id="maxdate">
+				<select id="graphTypes">
+					<option value="" disabled selected>Vali graafi tüüp</option>
+					<option value="column">Column</option>
+					<option value="bar">Bar</option>
+					<option value="pie">Pie</option>
+					<option value="spline">Spline</option>
+					<option value="scatter">Scatter</option>
+					<option value="line">Line</option>
+				</select>
+                <div>
+				    <input class="showButton" type="submit" value="Näita" id="sortButton"/>
+                </div>
+
+			</div>
+			<div class="outerWrapper">
+				<div id="graphContainer" class="graphContainer">
+						<div id="graph" class="graph graph1"></div>
+				</div>
+            </div>
+            <img class="graphPic" />
+			
+        </div>
+		
+		<script>
+
+			function navToGraphAndStats() {
+                location.replace("https://internetofasjad.000webhostapp.com/blogiMootor.html")
+            }
+            function navToGallery() {
+                //location.replace("https://internetofasjad.000webhostapp.com/ImagePage.html")
+            }
+	    	
+			window.onload = function() {
+			    getData();
+			    document.getElementById("sortButton").addEventListener("click", checkInputs);
+			}
+			let showEverything = false;
+			let graphCreated = false;
+			let graphElement;
+			let graphHeight;
+			let graphWidth;			
+			let mindate;
+			let maxdate;
+			let month;
+			let fromStart;
+			let graphType;
+			let dataType;
+			let graphTitle;
+			let startYear;
+			let text = "";
+			let aTemp = [];
+			let aHumidity = [];
+			let aLight = [];
+			let aGMoisture = [];
+			let aHeight = [];
+			let allTextLines = [];
+
+			function getData(){
+				$(document).ready(function() {
+					$.ajax({
+					type: "GET",
+					url: "timestamps.csv",
+					dataType: "text",
+					success: function(data) {processData(data);}
+					});
+				});  
+
+			}
+
+			function processData(data){
+				allTextLines = data.split(/\r\n|\n/);
+    			let headers = allTextLines[0].split(',');
+    			let lines = "";
+				console.log(allTextLines);
+				console.log(allTextLines.length);
+				for (let i=1; i<allTextLines.length; i++) {
+					let time = allTextLines[i].substr(0, allTextLines[1].indexOf(' '));
+					let aLine = allTextLines[i].split(",");
+    			}
+			}
+
+
+			function checkInputs() {
+				//Kontroll et vajalikud parameetrid oleks valitud
+			countDays = 0
+            fromStart = 0
+            if(document.getElementById("startYear").value=="" || document.getElementById("startYear").value > 2160 || document.getElementById("startYear").value < 2017) {
+                alert("Aasta valimata!")
+                return
+            } else {
+                startYear = parseInt(document.getElementById("startYear").value)
+            }
+            if(document.getElementById("monthSelect").value=="" || document.getElementById("monthSelect").value > 12 || document.getElementById("monthSelect").value < 1) {
+                alert("Kuu valimata!")
+                return
+            } else {
+                if(document.getElementById("monthSelect").value<10){
+                    month = parseInt("0" + document.getElementById("monthSelect").value)
+                } else {
+                    month = parseInt(document.getElementById("monthSelect").value)
+                }
+            }
+            if(document.getElementById("mindate").value=="" || document.getElementById("mindate").value > 31 || document.getElementById("mindate").value < 1) {
+                alert("Perioodi algus määramata!")
+                return
+            } else {
+                if(document.getElementById("mindate").value<10){
+                    mindate = parseInt("0" + document.getElementById("mindate").value)
+                } else {
+                    mindate = parseInt(document.getElementById("mindate").value)
+                }
+            }
+            if(document.getElementById("maxdate").value=="" || document.getElementById("maxdate").value > 31 || document.getElementById("maxdate").value < 1) {
+                alert("Perioodi lõpp määramata!")
+                return
+            } else {
+                if(document.getElementById("maxdate").value<10){
+                    maxdate = parseInt("0" + document.getElementById("maxdate").value)
+                } else {
+                    maxdate = parseInt(document.getElementById("maxdate").value)
+                }
+            }
+				
+				if(document.getElementById("graphTypes").value=="") {
+                alert("Graafi tüüp valimata!")
+                return
+            	} else {
+                graphType = document.getElementById("graphTypes").value
+            	}
+ 
+				createGraph();
+			}
+			
+			function createGraph() {
+				console.log("Andme tyyp", dataType);
+				let chart = {
+				    width:1000,//in pixels
+                    height:1000,//in pixels
+					title: {
+					text: "Mängu käivitamiste arv"      
+					},
+					data: [
+					{             
+					type: graphType,
+					dataPoints: [
+					
+					]
+					}
+					]
+				};
+				for(let i=1; i<allTextLines.length-1; i++) {
+					let splitArray = allTextLines[i].split(",");
+					console.log("AHHOI DOGGE", splitArray[0]);
+					if(splitArray[0].slice(0,4) == startYear && parseInt(splitArray[0].slice(5,7))==month && parseInt(splitArray[0].slice(8,10)) > mindate-1 && parseInt(splitArray[0].slice(8,10)) < maxdate+1){
+					    chart.data[0].dataPoints.push({y: parseInt(splitArray[1]), label: splitArray[0]})
+				
+					}
+				}
+				
+				let graph = new CanvasJS.Chart("graph", chart)
+				graph.render()
+			}
+		</script>
+	</html>

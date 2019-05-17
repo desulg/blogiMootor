@@ -1,0 +1,412 @@
+
+<!-- 
+    VEEBILEHT ASUB AADRESSIL: https://internetofasjad.000webhostapp.com/blogiMootor.html
+ -->
+<html>
+<head>
+<script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet">
+<style>
+    .header {
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-size: 24px;
+    }
+    .container {
+        text-align: center;
+        padding: 5px;
+        margin: auto;
+    }
+    #leftColumn{
+        width: 47%;
+        float: left;
+        display: inline-block;
+        font-family:"Open Sans";
+    }
+
+    #rightColumn{
+        width: 47%;
+        float: right;
+        font-family: "Open Sans";
+        font-size: 24px;
+    }
+    .navMenu{
+        border: none;
+        color: white;
+        padding: 16px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-family: "Open Sans";
+        font-size: 20px;
+        margin: 4px 2px;
+        -webkit-transition-duration: 0.4s;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        background-color: white; 
+        color: black; 
+        border: 2px solid #4545ff;
+    }
+    .navMenu:hover{
+        background-color: #4545ff;
+        color: white;
+    }
+    .paramSelec{
+        font-family:"Open Sans";
+        font-weight: normal;
+    }
+    .showButton{
+        padding: 16px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-family: "Poiret One";
+        font-size: 24px;
+        margin: 4px 2px;
+        -webkit-transition-duration: 0.4s;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        background-color: #4545ff; 
+        color: white; 
+        border: 2px solid #4545ff;
+        border-radius: 8px;
+    }
+    .showButton:hover{
+        background-color: white ;
+        color: #4545ff;
+
+    }
+</style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <button  class="navMenu" onclick="navToGraphCreator()">Loo graafik</button>
+            <button  class="navMenu" onclick="navToGallery()">Salvestatud graafikud</button>
+            <button  class="navMenu" onclick="navToStats1()">Taimede kasvu jälgimine III sektsioonis</button>
+            <button  class="navMenu" onclick="navToStats2()">Reaktsioonimängu statistika</button>
+            <button  class="navMenu" onclick="navToApi()">API</button>
+        </div>
+        <div class="container paramSelec">
+            <b>Vali parameetrid: </b>
+            <input type=checkbox id=0 onClick="stockchange(this)" checked>
+            <label for="0"> Temperatuur</label>
+            <input type=checkbox id=1 onClick="stockchange(this)" checked>
+            <label for="0"> Niiskus</label>
+            <input type=checkbox id=2 onClick="stockchange(this)" checked>
+            <label for="1"> Valgus</label>
+            <input type=checkbox id=3 onClick="stockchange(this)" checked>
+            <label for="1"> Pinnase Niiskus</label>
+            <input type=checkbox id=4 onClick="stockchange(this)" checked>
+            <label for="1"> Taime kõrgus</label>
+        </div>
+        <div class="container" >
+            <button class="showButton" onclick="getData()">Näita</button>
+        </div>
+    </div>
+    <div>
+        <div id="leftColumn" class="container">
+            <div id="graph"></div>
+            <div id="graph1"></div>
+        </div>
+        <div id="rightColumn" class="container">
+            <div>
+                <div id="avgTemp"></div>
+                <div id="minTemp"></div>
+                <div id="maxTemp"></div>
+                <div id="medianTemp"></div>
+                <div id="upperQuantileTemp"></div>
+                <div id="lowerQuantileTemp"></div>
+            </div>
+            <div>
+                <div id="avgHumidity"></div>
+                <div id="minHumidity"></div>
+                <div id="maxHumidity"></div>
+                <div id="medianHumidity"></div>
+                <div id="upperQuantileHumidity"></div>
+                <div id="lowerQuantileHumidity"></div>
+            </div>
+            <div>
+                <div id="avgGMoisture"></div>
+                <div id="minGMoisture"></div>
+                <div id="maxGMoisture"></div>
+                <div id="medianGMoisture"></div>
+                <div id="upperQuantileGMoisture"></div>
+                <div id="lowerQuantileGMoisture"></div>
+            </div>
+            <div>
+                <div id="avgHeight"></div>
+                <div id="minHeight"></div>
+                <div id="maxHeight"></div>
+                <div id="medianHeight"></div>
+                <div id="upperQuantileHeight"></div>
+                <div id="lowerQuantileHeight"></div>
+            </div>
+            <div>
+                <div id="avgLight"></div>
+                <div id="minLight"></div>
+                <div id="maxLight"></div>
+                <div id="medianLight"></div>
+                <div id="upperQuantileLight"></div>
+                <div id="lowerQuantileLight"></div>
+            </div>
+        </div>
+    </div>
+
+	
+	<script>
+	function navToGraphCreator() {
+        location.replace("https://internetofasjad.000webhostapp.com/blogiMootorStats.html")
+    }
+    function navToGallery() {
+        location.replace("https://internetofasjad.000webhostapp.com/ImagePage.html")
+    }
+	
+	function navToApi() {
+        location.replace("https://internetofasjad.000webhostapp.com/Api.html")
+    }
+    function navToStats1() {
+        location.replace("https://internetofasjad.000webhostapp.com/andmestik1.html")
+    }
+    function navToStats2() {
+        location.replace("https://internetofasjad.000webhostapp.com/andmestik2.html")
+    }
+	
+	
+	
+		let text = "";
+		let aTemp = [];
+		let aHumidity = [];
+		let aLight = [];
+		let aGMoisture = [];
+		let aHeight = [];
+		function getData(){
+			$(document).ready(function() {
+				$.ajax({
+				type: "GET",
+				url: "asjadeInternet.txt",
+				dataType: "text",
+				success: function(data) {processData(data);}
+				});
+			});  
+
+		}
+function saveData(){
+	var Month = document.getElementById("monthSelect");
+	var MinDate = document.getElementById("mindate");
+	var MaxDate = document.getElementById("maxdate");
+	if(Month.value < 1){
+	    alert("Kuu on valimata!");
+	}
+	if(MinDate.value < 1){
+	    alert("Algus kuupäev on valimata!");
+	}
+	if(MaxDate.value < 1){
+	    alert("Lõpp kuupäev on valimata!");
+	}
+	
+	
+}
+
+function barChartPlotter(e) {
+        var ctx = e.drawingContext;
+        var points = e.points;
+        var y_bottom = e.dygraph.toDomYCoord(0);
+
+        // Find the minimum separation between x-values.
+        // This determines the bar width.
+        var min_sep = Infinity;
+        for (var i = 1; i < points.length; i++) {
+          var sep = points[i].canvasx - points[i - 1].canvasx;
+          if (sep < min_sep) min_sep = sep;
+        }
+        var bar_width = Math.floor(2.0 / 3 * min_sep);
+
+        // Do the actual plotting.
+        for (var i = 0; i < points.length; i++) {
+          var p = points[i];
+          var center_x = p.canvasx;
+
+        ctx.fillRect(center_x - bar_width / 2, p.canvasy,
+      bar_width, y_bottom - p.canvasy);
+     ctx.strokeRect(center_x - bar_width / 2, p.canvasy,
+    bar_width, y_bottom - p.canvasy);
+    }
+    
+}
+
+function startGraph(){
+	g = new Dygraph(document.getElementById("graph"), "asjadeInternet.txt", {
+		legend: 'always',
+		title: 'Andmed joondiagrammina',
+		ylabel: 'Andmed',
+		showRangeSelector: true});
+		var checkTemp = document.getElementById(0);
+		setTimeout(hideGraphStuff, 500);
+	
+	g1 = new Dygraph(document.getElementById("graph1"), "asjadeInternet.txt", {
+		legend: 'always',
+		title: 'Andmed tulpdiagrammina',
+		ylabel: 'Andmed',
+		plotter: barChartPlotter,
+		showRangeSelector: true});
+		var checkTemp = document.getElementById(0);
+		setTimeout(hideGraphStuff, 500);
+}
+function hideGraphStuff(){
+	var checkTemp = document.getElementById(0);
+	var checkMoisture = document.getElementById(1);
+	var checkLight = document.getElementById(2);
+	var checkgMoisture = document.getElementById(3);
+	var checkHeight = document.getElementById(4);
+	if (checkTemp.checked == false){
+		g.setVisibility(0, false);
+		g1.setVisibility(0, false);
+	}
+	if (checkMoisture.checked == false){
+		g.setVisibility(1, false);
+		g1.setVisibility(1, false);
+	}
+	if (checkLight.checked == false){
+		g.setVisibility(2, false);
+	    g1.setVisibility(2, false);
+	    
+	}
+	if (checkgMoisture.checked == false){
+		g.setVisibility(3, false);
+		g1.setVisibility(3, false);
+	}
+	if (checkHeight.checked == false){
+		g.setVisibility(4, false);
+		g1.setVisibility(4, false);
+	}
+}
+
+function processData(allText) {
+	//Pean muutma 2019/04/26 12:34:30,23.3,33.6,9,412,1,
+	//Selliseks 1,10,100
+	var checkTemp = document.getElementById(0);
+	var checkMoisture = document.getElementById(1);
+	var checkLight = document.getElementById(2);
+	var checkgMoisture = document.getElementById(3);
+	var checkHeight = document.getElementById(4);
+    var allTextLines = allText.split(/\r\n|\n/);
+    allTextLines.pop();
+    var headers = allTextLines[0].split(",");
+    var lines = "";
+	text +=headers[0];
+	//text += allTextLines[0]+"\n";
+	if (checkTemp.checked == true){
+		text +=","+headers[1];
+	}
+	if (checkMoisture.checked == true){
+		text +=","+headers[2];
+	}
+	if (checkLight.checked == true){
+		text +=","+headers[3];
+	}
+	if (checkgMoisture.checked == true){
+		text +=","+headers[4];
+	}
+	if (checkHeight.checked == true){
+		text +=","+headers[5];
+	}
+    console.log(allTextLines);
+    for (var i=1; i<allTextLines.length; i++) {
+      /*  if(i=allTextLines.length-1){
+            console.log(i); 
+            break;
+        }*/
+		var time = allTextLines[i].substr(0, allTextLines[1].indexOf(' '));
+		var aLine = allTextLines[i].split(",");
+        console.log(aLine);
+		aTemp.push(parseFloat(aLine[1]));
+		aHumidity.push(parseFloat(aLine[2]));
+		aLight.push(parseFloat(aLine[3]));
+		aGMoisture.push(parseFloat(aLine[4]));
+		aHeight.push(parseFloat(aLine[5]));
+        
+		/*Kuupaev,temperatuur,niiskus,valgus,pNiiskus,taimeKorgus,
+2019/04/26 12:34:30,23.3,33.6,9,412,1, */
+        
+    }
+    console.log(aTemp);
+        var aTempsum = 0;
+        var aHumiditysum = 0;
+        var aLightsum = 0;
+        var aGMoisturesum = 0;
+        var aHeightsum = 0;
+        var count = aTemp.length;
+  for (var i = 0; i < count; i++) {
+    aTempsum += aTemp[i];
+    aHumiditysum += aHumidity[i];
+    aLightsum += aLight[i];
+    aGMoisturesum += aGMoisture[i];
+    aHeightsum += aHeight[i];
+  }
+  console.log("Temp summa:", aTempsum);
+  var avgTemp = aTempsum/count;
+  var avgHumidity = aHumiditysum/count;
+  var avgLight = aLightsum/count;
+  var avgGMoisture = aGMoisturesum/count;
+  var avgHeight = aHeightsum/count;
+  var minTemp = Math.min(...aTemp);
+  var minHumidity = Math.min(...aHumidity);
+  var minLight = Math.min(...aLight);
+  var minGMoisturte = Math.min(...aGMoisture);
+  var minHeight = Math.min(...aHeight);
+  var maxTemp = Math.max(...aTemp);
+  var maxHumidity = Math.max(...aHumidity);
+  var maxLight = Math.max(...aLight);
+  var maxGMoisturte = Math.max(...aGMoisture);
+  var maxHeight = Math.max(...aHeight);
+  var tempMedian = median(aTemp);
+  var humidityMedian = median(aHumidity);
+  var lightMedian = median(aLight);
+  var moistureMedian = median(aGMoisture);
+  var heightMedian = median(aHeight);
+  console.log(avgTemp);
+  document.getElementById("avgTemp").innerHTML = "Temperatuuri keskmine: " + avgTemp;
+  document.getElementById("maxTemp").innerHTML = "Temperatuuri maksimum: " + maxTemp;
+  document.getElementById("minTemp").innerHTML = "Temperatuuri miinimum: " + minTemp;
+  document.getElementById("medianTemp").innerHTML = "Temperatuuri mediaan: " + tempMedian;
+  document.getElementById("avgHumidity").innerHTML = "Õhuniiskuse keskmine: " + avgHumidity;
+  document.getElementById("maxHumidity").innerHTML = "Õhuniiskuse maksimum: " + maxHumidity;
+  document.getElementById("minHumidity").innerHTML = "Õhuniiskuse miinimum: " + minHumidity;
+  document.getElementById("medianHumidity").innerHTML = "Õhuniiskuse mediaan: " + humidityMedian;
+  document.getElementById("avgGMoisture").innerHTML = "Pinnase niiskuse keskmine: " + avgGMoisture;
+  document.getElementById("maxGMoisture").innerHTML = "Pinnase niiskuse maksimum: " + maxGMoisturte;
+  document.getElementById("minGMoisture").innerHTML = "Pinnase niiskuse miinimum: " + minGMoisturte;
+  document.getElementById("medianGMoisture").innerHTML = "Pinnase niiskuse mediaan: " + moistureMedian;
+  document.getElementById("avgHeight").innerHTML = "Taimekõrguse keskmine: " + avgHeight;
+  document.getElementById("maxHeight").innerHTML = "Taimekõrguse maksimum: " + maxHeight;
+  document.getElementById("minHeight").innerHTML = "Taimekõrguse miinimum: " + minHeight;
+  document.getElementById("medianHeight").innerHTML = "Taimekõrguse mediaan: " + heightMedian;
+    document.getElementById("avgLight").innerHTML = "Valgustiheduse keskmine: " + avgLight;
+  document.getElementById("maxLight").innerHTML = "Valgustiheduse maksimum: " + maxLight;
+  document.getElementById("minLight").innerHTML = "Valgustiheduse miinimum: " + minLight;
+  document.getElementById("medianLight").innerHTML = "Valgustiheduse mediaan: " + lightMedian;
+  function median(values){
+	values.sort(function(a,b){
+  	return a-b;
+  });
+  var half = Math.floor(values.length / 2);
+  
+  if (values.length % 2){
+  	return parseFloat(values[half]);
+  	console.log(parseFloat(values[half]));
+  }else{
+  	return (parseFloat(values[half - 1]) + parseFloat(values[half])) / 2.0;
+  	console.log((parseFloat(values[half - 1]) + parseFloat(values[half])) / 2.0);
+  }
+}
+	startGraph()
+    // alert(lines);
+}
+	</script>
+</body>
+</html>	
